@@ -247,9 +247,6 @@ class App extends Component {
           {loading ? loader : cardContainer}
         </div>
         {searchError||nothingReceived?nonRecv:null}
-        <div onClick={this.loadMore}>
-          Load More?
-        </div>
       </div>
     );
   }
