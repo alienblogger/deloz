@@ -19800,12 +19800,7 @@ var App = function (_Component) {
           cardData.length > 0 ? sortContainer : null,
           loading ? loader : cardContainer
         ),
-        searchError || nothingReceived ? nonRecv : null,
-        _react2.default.createElement(
-          "div",
-          { onClick: this.loadMore },
-          "Load More?"
-        )
+        searchError || nothingReceived ? nonRecv : null
       );
     }
   }]);
