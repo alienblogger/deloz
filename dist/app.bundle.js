@@ -19593,7 +19593,7 @@ var App = function (_Component) {
       });
     };
 
-    _this.search = function (append) {
+    _this.search = function () {
       var _this$state = _this.state,
           searchTerm = _this$state.searchTerm,
           sortField = _this$state.sortField,
@@ -19617,7 +19617,7 @@ var App = function (_Component) {
       }
       _this.axget(url, function (data) {
         self.setState({
-          cardData: append ? self.state.cardData += data : data,
+          cardData: data,
           loading: false
         });
       });
@@ -19658,11 +19658,12 @@ var App = function (_Component) {
       });
     };
 
-    _this.loadMore = function (e) {
+    _this.changePage = function (op) {
+      var val = op === "add" ? _this.state.page += 1 : _this.state.page -= 1;
       _this.setState({
-        page: _this.state.page += 1
+        page: val
       });
-      _this.search(true);
+      _this.search();
     };
 
     _this.getSortType = function (str) {
@@ -19705,11 +19706,16 @@ var App = function (_Component) {
   //Set Sorting State
 
 
+  //Load Next set of data
+
+
   //Get the Sorting Field value for Search Query
 
   _createClass(App, [{
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var _state = this.state,
           cardData = _state.cardData,
           nothingReceived = _state.nothingReceived,
@@ -19780,6 +19786,31 @@ var App = function (_Component) {
         _react2.default.createElement("i", { className: "fa fa-spin fa-spinner" })
       );
 
+      //Pagination
+      var pagination = _react2.default.createElement(
+        "div",
+        { className: "pagination flex" },
+        _react2.default.createElement(
+          "div",
+          { onClick: function onClick() {
+              return _this2.changePage('sub');
+            } },
+          this.state.page > 1 ? _react2.default.createElement("i", { className: "fa fa-chevron-left" }) : null
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "page-number" },
+          this.state.page
+        ),
+        _react2.default.createElement(
+          "div",
+          { onClick: function onClick() {
+              return _this2.changePage('add');
+            } },
+          cardData.length === 30 ? _react2.default.createElement("i", { className: "fa fa-chevron-right" }) : null
+        )
+      );
+
       return _react2.default.createElement(
         "div",
         { className: "app-container" },
@@ -19794,6 +19825,7 @@ var App = function (_Component) {
             placeholder: "Search for a Repo"
           })
         ),
+        !loading && cardData.length > 0 ? pagination : null,
         _react2.default.createElement(
           "div",
           { className: "container" },

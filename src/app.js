@@ -79,7 +79,7 @@ class App extends Component {
   };
 
   //Execute Search
-  search = (append) => {
+  search = () => {
     const {
       searchTerm,
       sortField,
@@ -103,8 +103,8 @@ class App extends Component {
     }
     this.axget(url, function(data) {
       self.setState({
-        cardData: append?self.state.cardData+=data:data,
-        loading: false
+        cardData:data,
+        loading:false
       });
     });
   };
@@ -123,13 +123,13 @@ class App extends Component {
       });
       if (order === "asc") {
         self.setState({
-          cardData: sorted,
-          loading: false
+          cardData:sorted,
+          loading:false
         });
       } else {
         self.setState({
-          cardData: sorted.reverse(),
-          loading: false
+          cardData:sorted.reverse(),
+          loading:false
         });
       }
     });
@@ -155,13 +155,13 @@ class App extends Component {
     );
   };
 
-
-  loadMore = (e) => {
+  //Load Next set of data
+  changePage = (op) => {
+    let val = op==="add"?this.state.page+=1:this.state.page-=1;
     this.setState({
-      page:this.state.page+=1
+      page:val
     });
-    this.search(true);
-
+    this.search();
   }
 
   //Get the Sorting Field value for Search Query
@@ -231,6 +231,21 @@ class App extends Component {
       </div>
     );
 
+    //Pagination
+    const pagination = (
+      <div className="pagination flex">
+          <div onClick={()=>this.changePage('sub')}>
+            {this.state.page>1?<i className="fa fa-chevron-left"></i>:null}
+          </div>
+          <div className="page-number">
+            {this.state.page}
+          </div>
+          <div onClick={()=>this.changePage('add')}>
+            {cardData.length===30?<i className="fa fa-chevron-right"></i>:null}
+          </div>
+        </div>
+      )
+
     return (
       <div className="app-container">
         <div className="searchbar">
@@ -242,6 +257,7 @@ class App extends Component {
             placeholder="Search for a Repo"
           />
         </div>
+        {!loading && cardData.length>0?pagination:null}
         <div className="container">
           {cardData.length > 0 ? sortContainer : null}
           {loading ? loader : cardContainer}
